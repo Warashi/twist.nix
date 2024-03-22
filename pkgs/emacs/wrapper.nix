@@ -20,6 +20,8 @@
 
   nativeComp = emacs.withNativeCompilation or emacs.nativeComp or false;
 
+  withNS = emacs.withNS or false;
+
   # Use a symlink farm for specifying subdirectory names inside site-lisp.
   packageEnv = buildEnv {
     name = "elisp-packages";
@@ -109,7 +111,10 @@ in
       then elispManifest.outPath
       else null;
   }
-  ''
+  lib.optionalString withNS ''
+    mkdir -p $out/Applications
+    mv nextstep/Emacs.app $out/Applications
+  '' + ''
     mkdir -p $out/bin
     lndir -silent ${emacs}/bin $out/bin
 
