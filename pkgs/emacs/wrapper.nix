@@ -190,4 +190,4 @@ in
   '' + (if withNS then ''
     mkdir -p $out/Applications
     mv nextstep/Emacs.app $out/Applications
-  '' else '')
+  '' else '''')
