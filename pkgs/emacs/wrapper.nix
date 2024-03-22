@@ -187,7 +187,7 @@ in
         --set EMACSLOADPATH "$siteLisp:"
       fi
     done
-  '' + lib.optionalString withNS ''
+
     mkdir -p $out/Applications
     mv nextstep/Emacs.app $out/Applications
   ''
