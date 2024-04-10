@@ -165,7 +165,7 @@ in {
       ++ [(pkgs.runCommandLocal "${cfg.name}-desktop-item" {
           nativeBuildInputs =
             [pkgs.copyDesktopItems]
-            ++ (lib.optional pkg.stdenv.isDarwin [pkgs.desktopToDarwinBundle]);
+            ++ (lib.optional pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle]);
           desktopItems = desktopItem;
         } ''
           runHook postInstall
