@@ -169,6 +169,7 @@ in {
           desktopItems = desktopItem;
         } ''
           runHook postInstall
+          runHook fixupOutput
         '')
       ]
       ++ lib.optional cfg.icons.enable emacs-config.icons;
