@@ -167,9 +167,9 @@ in {
           desktopItems = desktopItem;
         } ''
           runHook postInstall
-          ${lib.optional pkgs.stdenv.isDarwin ''
+          ${if pkgs.stdenv.isDarwin then ''
             source ${pkgs.desktopToDarwinBundle}/nix-support/setup-hook
-          ''}
+          '' else ''''}
         '')];
 
     home.file = builtins.listToAttrs (
