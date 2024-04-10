@@ -162,15 +162,14 @@ in {
     home.packages =
       [wrapper]
       ++ lib.optional cfg.icons.enable emacs-config.icons
-      ++ (pkgs.runCommandLocal "${cfg.name}-desktop-item" {
-          nativeBuildInputs = [pkgs.copyDesktopItems];
+      ++ [(pkgs.runCommandLocal "${cfg.name}-desktop-item" {
+          nativeBuildInputs =
+            [pkgs.copyDesktopItems]
+            ++ (lib.optional pkg.stdenv.isDarwin [pkgs.desktopToDarwinBundle]);
           desktopItems = desktopItem;
         } ''
           runHook postInstall
-          ${lib.optional pkgs.stdenv.isDarwin ''
-            source ${pkgs.desktopToDarwinBundle}/nix-support/setup-hook
-          ''}
-        '');
+        '')];
 
     home.file = builtins.listToAttrs (
       (lib.optional cfg.createInitFile {
