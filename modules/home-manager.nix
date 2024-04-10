@@ -171,6 +171,7 @@ in {
             ++ (lib.optional pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle]);
           desktopItems = desktopItem;
         } ''
+          mkdir -p $out/bin
           lndir ${wrapper}/bin $out/bin
           runHook postInstall
           runHook fixupOutput
