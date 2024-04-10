@@ -49,7 +49,7 @@ home-manager module that provides an installation of Emacs
     inherit (cfg.desktopItem) desktopName mimeTypes;
     comment = "Edit text";
     genericName = "Text Editor";
-    exec = "${cfg.name} %F";
+    exec = "${wrapper}/bin/emacs %F";
     icon = "emacs";
     startupNotify = true;
     startupWMClass = "Emacs";
@@ -160,17 +160,16 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages =
-      [wrapper]
-      ++ lib.optional cfg.icons.enable emacs-config.icons
-      ++ [(pkgs.runCommandLocal "${cfg.name}-desktop-item" {
-          nativeBuildInputs = [pkgs.copyDesktopItems];
+      [
+        wrapper
+        (pkgs.runCommandLocal "${cfg.name}-desktop-item" {
+          nativeBuildInputs =
+            [pkgs.copyDesktopItems]
+            ++ (lib.optional pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle]);
           desktopItems = desktopItem;
-        } ''
-          runHook postInstall
-          ${if pkgs.stdenv.isDarwin then ''
-            source ${pkgs.desktopToDarwinBundle}/nix-support/setup-hook
-          '' else ''''}
-        '')];
+        } '''')
+      ]
+      ++ lib.optional cfg.icons.enable emacs-config.icons
 
     home.file = builtins.listToAttrs (
       (lib.optional cfg.createInitFile {
