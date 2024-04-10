@@ -169,7 +169,7 @@ in {
           desktopItems = desktopItem;
         } '''')
       ]
-      ++ lib.optional cfg.icons.enable emacs-config.icons
+      ++ lib.optional cfg.icons.enable emacs-config.icons;
 
     home.file = builtins.listToAttrs (
       (lib.optional cfg.createInitFile {
