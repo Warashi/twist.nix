@@ -167,7 +167,9 @@ in {
             [pkgs.copyDesktopItems]
             ++ (lib.optional pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle]);
           desktopItems = desktopItem;
-        } '''')
+        } ''
+          runHook postInstall
+        '')
       ]
       ++ lib.optional cfg.icons.enable emacs-config.icons;
 
