@@ -161,14 +161,13 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages =
       [
-        wrapper
         (pkgs.runCommandLocal "${cfg.name}-desktop-item" {
           nativeBuildInputs =
             [
               pkgs.copyDesktopItems
               pkgs.xorg.lndir
             ]
-            ++ (lib.optional pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle]);
+            ++ (lib.optional pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle emacs-config.icons]);
           desktopItems = desktopItem;
         } ''
           mkdir -p $out/bin
