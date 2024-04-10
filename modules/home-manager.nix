@@ -164,10 +164,14 @@ in {
         wrapper
         (pkgs.runCommandLocal "${cfg.name}-desktop-item" {
           nativeBuildInputs =
-            [pkgs.copyDesktopItems]
+            [
+              pkgs.copyDesktopItems
+              pkgs.xorg.lndir
+            ]
             ++ (lib.optional pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle]);
           desktopItems = desktopItem;
         } ''
+          lndir ${wrapper}/bin $out/bin
           runHook postInstall
           runHook fixupOutput
         '')
