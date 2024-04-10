@@ -49,7 +49,7 @@ home-manager module that provides an installation of Emacs
     inherit (cfg.desktopItem) desktopName mimeTypes;
     comment = "Edit text";
     genericName = "Text Editor";
-    exec = "${wrapper}/bin/emacs %F";
+    exec = "emacs %F";
     icon = "emacs";
     startupNotify = true;
     startupWMClass = "Emacs";
