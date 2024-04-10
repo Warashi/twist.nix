@@ -167,6 +167,12 @@ in {
           desktopItems = desktopItem;
         } ''
           runHook postInstall
+        '')
+      ++ lib.optional pkgs.stdenv.isDarwin (pkgs.runCommandLocal "${cfg.name}-desktop-item" {
+          nativeBuildInputs = [pkgs.desktopToDarwinBundle];
+          desktopItems = desktopItem;
+        } ''
+          runHook postInstall
         '');
 
     home.file = builtins.listToAttrs (
