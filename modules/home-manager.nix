@@ -167,11 +167,12 @@ in {
               pkgs.copyDesktopItems
               pkgs.xorg.lndir
             ]
-            ++ (lib.optional pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle emacs-config.icons]);
+            ++ (lib.optionals pkgs.stdenv.isDarwin [pkgs.desktopToDarwinBundle emacs-config.icons]);
           desktopItems = desktopItem;
         } ''
           mkdir -p $out/bin
           lndir ${wrapper}/bin $out/bin
+          lndir ${emacs-config.icons}/share $out/share
           runHook postInstall
           runHook fixupOutput
         '')
