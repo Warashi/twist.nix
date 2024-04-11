@@ -172,7 +172,10 @@ in {
         } ''
           mkdir -p $out/bin
           lndir ${wrapper}/bin $out/bin
+
+          mkdir -p $out/share
           lndir ${emacs-config.icons}/share $out/share
+
           runHook postInstall
           runHook fixupOutput
         '')
