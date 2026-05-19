@@ -3,20 +3,20 @@ name: Smoke test
 on:
   push:
     branches:
-    - master
+      - master
     paths:
-    - 'flake.lock'
-    - 'pkgs/**'
-    - 'modules/**'
-    - 'test/**'
-    - '.github/workflows/smoke-test.yml'
+      - 'flake.lock'
+      - 'pkgs/**'
+      - 'modules/**'
+      - 'test/**'
+      - '.github/workflows/smoke-test.yml'
   pull_request:
     paths:
-    - 'flake.lock'
-    - 'pkgs/**'
-    - 'modules/**'
-    - 'test/**'
-    - '.github/workflows/smoke-test.yml'
+      - 'flake.lock'
+      - 'pkgs/**'
+      - 'modules/**'
+      - 'test/**'
+      - '.github/workflows/smoke-test.yml'
   workflow_dispatch:
   workflow_call:
   schedule:
@@ -26,31 +26,36 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
       matrix:
         os:
-        - ubuntu-latest
-        - macos-latest
+          - ubuntu-latest
+          - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-    - name: Set up Nix
-      uses: ./.github/actions/setup
-      with:
-        cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - name: Set up Nix
+        uses: ./.github/actions/setup
+        with:
+          cachix-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
-    - name: Update the flake inputs for the test
-      run: |
-        nix develop -c just local-update-flake
-      working-directory: test
+      - name: Update the flake inputs for the test
+        run: |
+          nix develop -c just local-update-flake
+        working-directory: test
 
-    - name: Test
-      working-directory: test
-      run: |
-        nix develop -c just test
-        nix develop -c just local-lock-2
+      - name: Test
+        working-directory: test
+        run: |
+          nix develop -c just test
+          nix develop -c just local-lock-2
 
-    - run: nix flake show
+      - run: nix flake show

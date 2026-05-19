@@ -3,41 +3,46 @@ name: Unit tests
 on:
   push:
     branches:
-    - master
+      - master
     paths:
-    - 'flake.lock'
-    - 'pkgs/build-support/**'
+      - 'flake.lock'
+      - 'pkgs/build-support/**'
   pull_request:
     paths:
-    - 'flake.lock'
-    - 'pkgs/build-support/**'
+      - 'flake.lock'
+      - 'pkgs/build-support/**'
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
       matrix:
         os:
-        - ubuntu-latest
-        - macos-latest
+          - ubuntu-latest
+          - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-    - uses: cachix/install-nix-action@v31
-      with:
-        # nixpkgs channel is needed for the unit tests
-        nix_path: nixpkgs=channel:nixos-unstable
+      - uses: cachix/install-nix-action@b97f05dcb019ddea06450a50ef6203d2fdc19fee # v31
+        with:
+          # nixpkgs channel is needed for the unit tests
+          nix_path: nixpkgs=channel:nixos-unstable
 
-    - run: nix flake update
-      working-directory: pkgs/build-support/elisp
+      - run: nix flake update
+        working-directory: pkgs/build-support/elisp
 
-    - name: Run unit tests
-      run: |
-        set -euo pipefail
-        nix-instantiate --strict --eval --json pkgs/build-support/**/test*.nix \
-        | jq
+      - name: Run unit tests
+        run: |
+          set -euo pipefail
+          nix-instantiate --strict --eval --json pkgs/build-support/**/test*.nix \
+          | jq
