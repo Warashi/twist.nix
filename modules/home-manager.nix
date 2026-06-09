@@ -96,8 +96,8 @@ in {
 
       manifestFileName = mkOption {
         type = types.str;
-        description = lib.mdDoc ''
-          Name of the manifest file, relative from `user-emacs-directory.
+        description = ''
+          Name of the manifest file, relative from `user-emacs-directory`.
 
           This is necessary to enable hot reloading of packages.
         '';
@@ -127,9 +127,9 @@ in {
       };
 
       serviceIntegration = {
-        enable = mkEnableOption (lib.mdDoc ''
+        enable = mkEnableOption ''
           Enable service integration. For now, only systemd is supported.
-        '');
+        '';
       };
 
       icons = {
