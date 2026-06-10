@@ -34,7 +34,7 @@ in
     }:
       if version == 7
       then lib.mapAttrs (_: {locked, ...}: locked) nodes
-      else throw "Unsupported flake.lock version ${version}";
+      else throw "Unsupported flake.lock version ${toString version}";
 
     flakeLockData =
       if pathExists flakeLockFile
