@@ -44,5 +44,10 @@ jobs:
       - name: Run unit tests
         run: |
           set -euo pipefail
-          nix-instantiate --strict --eval --json pkgs/build-support/**/test*.nix \
-          | jq
+
+          tests=()
+          while IFS= read -r -d '' test; do
+            tests+=("$test")
+          done < <(find pkgs/build-support -type f -name 'test*.nix' -print0)
+
+          nix-instantiate --strict --eval --json "${tests[@]}" | jq
