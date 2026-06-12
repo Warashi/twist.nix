@@ -40,6 +40,15 @@ home-manager module that provides an installation of Emacs
         lib.optionalString cfg.emacsclient.enable
         "ln -t $out/bin -s ${emacs-config.emacs}/bin/emacsclient"
       }
+
+      if [[ -d "${emacs-config}/Applications/Emacs.app" ]]; then
+        TARGET_NAME="${(lib.strings.toUpper (builtins.substring 0 1 cfg.name)) + (builtins.substring 1 (-1) cfg.name)}"
+
+        mkdir -p $out/Applications
+        cp -r ${emacs-config}/Applications/Emacs.app $out/Applications/$TARGET_NAME.app
+        wrapProgram $out/Applications/$TARGET_NAME.app/Contents/MacOS/Emacs \
+          --add-flags --init-directory="${config.home.homeDirectory}/${cfg.directory}"
+      fi
     '';
 
   desktopItem = pkgs.makeDesktopItem {
