@@ -49,9 +49,13 @@ let
             (lib.strings.toUpper (builtins.substring 0 1 cfg.name)) + (builtins.substring 1 (-1) cfg.name)
           }"
 
-          mkdir -p $out/Applications
-          cp -r ${emacs-config}/Applications/Emacs.app $out/Applications/$TARGET_NAME.app
-          wrapProgram $out/Applications/$TARGET_NAME.app/Contents/MacOS/Emacs \
+        mkdir -p $out/Applications/$TARGET_NAME.app/Contents/MacOS
+        cp -r \
+          ${emacs-config}/Applications/Emacs.app/Contents/Info.plist \
+          ${emacs-config}/Applications/Emacs.app/Contents/PkgInfo \
+          ${emacs-config}/Applications/Emacs.app/Contents/Resources \
+          $out/Applications/$TARGET_NAME.app/Contents
+          makeWrapper ${emacs-config}/Applications/Emacs.app/Contents/MacOS/Emacs $out/Applications/$TARGET_NAME.app/Contents/MacOS/Emacs \
             --add-flags --init-directory="${config.home.homeDirectory}/${cfg.directory}"
         fi
       '';
