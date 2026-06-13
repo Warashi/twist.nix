@@ -195,8 +195,7 @@ in
         ${emacs}/Applications/Emacs.app/Contents/PkgInfo \
         ${emacs}/Applications/Emacs.app/Contents/Resources \
         $out/Applications/Emacs.app/Contents
-      cp ${emacs}/Applications/Emacs.app/Contents/MacOS/Emacs $out/Applications/Emacs.app/Contents/MacOS/
-      wrapProgram $out/Applications/Emacs.app/Contents/MacOS/Emacs \
+      makeWrapper ${emacs}/Applications/Emacs.app/Contents/MacOS/Emacs $out/Applications/Emacs.app/Contents/MacOS/Emacs \
         ${lib.optionalString (length executablePackages > 0) "--prefix PATH : ${lib.escapeShellArg (lib.makeBinPath executablePackages)}"} \
         --prefix INFOPATH : ${emacs}/share/info:$out/share/info:${infoPath} \
         ${lib.optionalString nativeComp "--prefix EMACSNATIVELOADPATH : $nativeLisp:$nativeLoadPath"} \
