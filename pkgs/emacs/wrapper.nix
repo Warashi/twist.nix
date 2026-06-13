@@ -191,11 +191,11 @@ in
     if [[ -d "${emacs}/Applications/Emacs.app" ]]; then
       mkdir -p $out/Applications/Emacs.app/Contents/MacOS
       cp -r \
-        ${emacs}/Applications/Emacs.app/Contents/Emacs \
         ${emacs}/Applications/Emacs.app/Contents/Info.plist \
         ${emacs}/Applications/Emacs.app/Contents/PkgInfo \
         ${emacs}/Applications/Emacs.app/Contents/Resources \
         $out/Applications/Emacs.app/Contents
+      cp ${emacs}/Applications/Emacs.app/Contents/MacOS/Emacs $out/Applications/Emacs.app/Contents/MacOS/
       wrapProgram $out/Applications/Emacs.app/Contents/MacOS/Emacs \
         ${lib.optionalString (length executablePackages > 0) "--prefix PATH : ${lib.escapeShellArg (lib.makeBinPath executablePackages)}"} \
         --prefix INFOPATH : ${emacs}/share/info:$out/share/info:${infoPath} \
