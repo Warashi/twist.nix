@@ -4,7 +4,9 @@
 ;;
 ;; Based on code from https://www.emacswiki.org/emacs/GccEmacs#h5o-14
 
-(require 'comp-run)
+;; comp-run.el was split out of comp.el in Emacs 30.
+(unless (require 'comp-run nil t)
+  (require 'comp))
 
 (if (fboundp 'comp--async-runnings)
     (defalias 'twist--comp-async-runnings #'comp--async-runnings)
