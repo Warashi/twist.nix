@@ -31,4 +31,4 @@
 in
   if prev.version == 7
   then version7
-  else throw "Unsupported flake.lock version ${prev.version}"
+  else throw "Unsupported flake.lock version ${toString prev.version}"
