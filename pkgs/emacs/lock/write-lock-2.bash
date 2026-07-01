@@ -56,8 +56,9 @@ function checkSettings() {
 
   local parent
   parent=$(dirname "$outDir")
-  if [[ $( cd "$parent" && git-rev-parse --is-inside-work-tree 2>/dev/null ) = true ]]; then
+  if [[ $( cd "$parent" && git rev-parse --is-inside-work-tree 2>/dev/null ) != true ]]; then
     err "Directory $outDir is not inside a Git working tree"
+    exit 1
   fi
 }
 
