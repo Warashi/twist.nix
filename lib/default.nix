@@ -3,10 +3,6 @@ let
   makeFromElisp = lib: (inputs.elisp-helpers.lib.makeLib { inherit lib; }).fromElisp;
 
   inherit (builtins)
-    readFile
-    split
-    filter
-    isString
     removeAttrs
     ;
 in
@@ -24,15 +20,6 @@ in
       inherit lib;
       fromElisp = makeFromElisp lib;
     };
-
-  emacsBuiltinLibraries =
-    {
-      lib,
-    }@args:
-    lib.pipe (readFile (import ../pkgs/emacs/builtins.nix args)) [
-      (split "\n")
-      (filter (s: isString s && s != ""))
-    ];
 
   # A function that builds a single Emacs Lisp package. The argument should be
   # an attribute set that takes the same form as an entry value in
