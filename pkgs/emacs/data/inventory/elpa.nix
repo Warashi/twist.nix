@@ -65,6 +65,8 @@ let
     else
       pathString;
 
+  isSymbolicReference = url: match "[-@+a-z0-9]+" url != null;
+
   makeExternal =
     ename: entry:
     let
@@ -135,6 +137,14 @@ let
   externalPackages = lib.pipe elpaEntries [
     (if args ? auto-sync-only && args.auto-sync-only then filterAutoSync else lib.id)
     (lib.filterAttrs (_: entry: entry ? url && checkUrl entry.url))
+    (orig: lib.mapAttrs (
+      _: entry:
+      if entry ? url && isSymbolicReference entry.url then
+        entry
+        // {
+          inherit (orig.${entry.url}) url;
+        }
+      else entry) orig)
     (lib.mapAttrs makeExternal)
   ];
 in
