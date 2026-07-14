@@ -42,6 +42,10 @@
 (use-package consult
   :ensure t)
 
+;; GNU ELPA external pacakge that references the URL of another package
+(use-package embark-consult
+  :ensure t)
+
 ;; GNU ELPA external package with :make
 (use-package org-transclusion
   :ensure t)

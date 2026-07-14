@@ -16,6 +16,19 @@
         "type": "github"
       }
     },
+    "bbdb": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1698051791,
+        "narHash": "sha256-PvuR28XjiF+CnQHECAU4C+aI9rBmna00n3zELbZ3ZIA=",
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/bbdb-3.2.2.4.tar"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/bbdb-3.2.2.4.tar"
+      }
+    },
     "compat": {
       "flake": false,
       "locked": {
@@ -64,6 +77,19 @@
         "type": "github"
       }
     },
+    "dict-tree": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1697403832,
+        "narHash": "sha256-ydD8+1MpaKhMAM0/1U8pylr7dSDjOFSRkKB6I2+Xywg=",
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/dict-tree-0.17.tar"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/dict-tree-0.17.tar"
+      }
+    },
     "doom-themes": {
       "flake": false,
       "locked": {
@@ -96,20 +122,35 @@
         "type": "github"
       }
     },
-    "git-commit": {
+    "embark": {
       "flake": false,
       "locked": {
-        "lastModified": 1725147338,
-        "narHash": "sha256-UWZehIqeHp41b93jwqfAjeKZRuv99AJQu2GP2yGSKQo=",
-        "owner": "magit",
-        "repo": "magit",
-        "rev": "9be8a4ab7a7dc6f34615f1011e8da263651c8f87",
+        "lastModified": 1781060531,
+        "narHash": "sha256-41hZeCbQuQg8fyo/FZ2GP0HJL7mY1FE0BEolt7AhWGg=",
+        "owner": "oantolin",
+        "repo": "embark",
+        "rev": "350ca86924c5027e80875943fba7b912a71e5791",
         "type": "github"
       },
       "original": {
-        "owner": "magit",
-        "ref": "legacy-stub",
-        "repo": "magit",
+        "owner": "oantolin",
+        "repo": "embark",
+        "type": "github"
+      }
+    },
+    "embark-consult": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1781060531,
+        "narHash": "sha256-41hZeCbQuQg8fyo/FZ2GP0HJL7mY1FE0BEolt7AhWGg=",
+        "owner": "oantolin",
+        "repo": "embark",
+        "rev": "350ca86924c5027e80875943fba7b912a71e5791",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oantolin",
+        "repo": "embark",
         "type": "github"
       }
     },
@@ -126,6 +167,48 @@
       "original": {
         "owner": "atykhonov",
         "repo": "google-translate",
+        "type": "github"
+      }
+    },
+    "heap": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1711877323,
+        "narHash": "sha256-LlBUyzpVQ6EkuiNjxhcURCH5v34KZ2Jbp48kBYnUEMg=",
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/heap-0.5.tar"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/heap-0.5.tar"
+      }
+    },
+    "ivy": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1743282211,
+        "narHash": "sha256-EBsRqOZS1j5ZJYwFeFMhzpUsHZOfM8A1bmIOZwrcv6A=",
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/ivy-0.15.1.tar"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/ivy-0.15.1.tar"
+      }
+    },
+    "llama": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780325752,
+        "narHash": "sha256-c1sk4iVTeDoSGBq6h7VPemdKhYi/P3UfLSJbd3MjyuM=",
+        "owner": "tarsius",
+        "repo": "llama",
+        "rev": "4d4024048053b898a01521046e0f063ee47615b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tarsius",
+        "repo": "llama",
         "type": "github"
       }
     },
@@ -193,6 +276,19 @@
         "type": "github"
       }
     },
+    "queue": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1711878711,
+        "narHash": "sha256-l1a18KhqXRtir2NSDVEY4yWGoUl97Vo9CvD1T9Jpw/Q=",
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/queue-0.2.tar"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/queue-0.2.tar"
+      }
+    },
     "refactor": {
       "flake": false,
       "locked": {
@@ -212,39 +308,73 @@
     "root": {
       "inputs": {
         "async": "async",
+        "bbdb": "bbdb",
         "compat": "compat",
         "consult": "consult",
         "dash": "dash",
+        "dict-tree": "dict-tree",
         "doom-themes": "doom-themes",
         "drag-stuff": "drag-stuff",
-        "git-commit": "git-commit",
+        "embark": "embark",
+        "embark-consult": "embark-consult",
         "google-translate": "google-translate",
+        "heap": "heap",
+        "ivy": "ivy",
+        "llama": "llama",
         "magit": "magit",
         "magit-section": "magit-section",
         "org-transclusion": "org-transclusion",
         "popup": "popup",
+        "queue": "queue",
         "refactor": "refactor",
+        "tNFA": "tNFA",
         "tramp": "tramp",
+        "trie": "trie",
         "undo-tree": "undo-tree",
         "vertico": "vertico",
         "with-editor": "with-editor"
       }
     },
+    "tNFA": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-ASFlaAupNzeXOXUgKO2wbysHCt3G2M7N5HAPBYgw+9U=",
+        "type": "file",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/tNFA-0.1.1.el"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/tNFA-0.1.1.el"
+      }
+    },
     "tramp": {
       "flake": false,
       "locked": {
-        "lastModified": 1738225436,
-        "narHash": "sha256-16nL6SOtBF7hAX/2m7F+qzK/cDAHw8o8bWLImC0N7rY=",
-        "ref": "externals/tramp",
-        "rev": "8e038b0dc1fc16acf26c1c4b549a7be3c86e8a45",
-        "revCount": 94,
-        "type": "git",
-        "url": "https://git.savannah.gnu.org/git/tramp.git"
+        "lastModified": 1782778226,
+        "narHash": "sha256-mo3MfAn+lR9+nLCEW2NSjDF6LTYOAiVoX+UaNWZ4j20=",
+        "owner": "emacs-straight",
+        "repo": "tramp",
+        "rev": "ac1857fe632ca9d3a6bead0c53246afab5b88285",
+        "type": "github"
       },
       "original": {
-        "ref": "externals/tramp",
-        "type": "git",
-        "url": "https://git.savannah.gnu.org/git/tramp.git"
+        "owner": "emacs-straight",
+        "ref": "master",
+        "repo": "tramp",
+        "type": "github"
+      }
+    },
+    "trie": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1697360670,
+        "narHash": "sha256-FpkdWXrrgFEF/NHepkINHIlpYI72M+DaJwBg3r9GPMQ=",
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/trie-0.6.tar"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/trie-0.6.tar"
       }
     },
     "undo-tree": {
