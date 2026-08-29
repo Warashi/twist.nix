@@ -163,3 +163,13 @@ in
           else {}
         );
     }
+    // lib.optionalAttrs (attrs ? origin && attrs.origin.type == "git") {
+      # Only the locked revision is ever used, so the history is dead weight;
+      # cloning it takes 53 seconds for org-mode against 3 seconds shallow.
+      # Not applied to github/tarball inputs because they are fetched as
+      # archives already. This assumes the server serves a revision that is no
+      # longer at the branch head, which every forge does but a bare
+      # git-http-backend with the default configuration does not; override
+      # `origin` from inputOverrides to opt a package out.
+      origin = attrs.origin // {shallow = true;};
+    }
