@@ -189,16 +189,45 @@ in
     done
 
     if [[ -d "${emacs}/Applications/Emacs.app" ]]; then
-      mkdir -p $out/Applications/Emacs.app/Contents/MacOS
+      app=$out/Applications/Emacs.app
+      mkdir -p $app/Contents/MacOS
       cp -r \
         ${emacs}/Applications/Emacs.app/Contents/Info.plist \
         ${emacs}/Applications/Emacs.app/Contents/PkgInfo \
         ${emacs}/Applications/Emacs.app/Contents/Resources \
-        $out/Applications/Emacs.app/Contents
-      makeWrapper ${emacs}/Applications/Emacs.app/Contents/MacOS/Emacs $out/Applications/Emacs.app/Contents/MacOS/Emacs \
-        ${lib.optionalString (length executablePackages > 0) "--prefix PATH : ${lib.escapeShellArg (lib.makeBinPath executablePackages)}"} \
-        --prefix INFOPATH : ${emacs}/share/info:$out/share/info:${infoPath} \
-        ${lib.optionalString nativeComp "--prefix EMACSNATIVELOADPATH : $nativeLisp:$nativeLoadPath"} \
-        --set EMACSLOADPATH "$siteLisp:"
+        $app/Contents
+      chmod u+w $app/Contents/Info.plist
+
+      # macOS TCC tracks permissions by the code signature of the executable
+      # in Contents/MacOS, so a shell script there cannot be sealed. Keep the
+      # Mach-O and hand the environment over through LSEnvironment instead.
+      # LSEnvironment replaces variables rather than prefixing them, so PATH
+      # keeps the defaults of a LaunchServices-launched process.
+      cp ${emacs}/Applications/Emacs.app/Contents/MacOS/Emacs $app/Contents/MacOS/Emacs
+
+      xmlEscape() {
+        local s=$1
+        s=''${s//&/\&amp;}
+        s=''${s//</\&lt;}
+        printf '%s' "$s"
+      }
+      lsEnvironment=""
+      addEnv() {
+        lsEnvironment+="    <key>$1</key>"$'\n'
+        lsEnvironment+="    <string>$(xmlEscape "$2")</string>"$'\n'
+      }
+      ${lib.optionalString (length executablePackages > 0) ''addEnv PATH "${lib.makeBinPath executablePackages}:/usr/bin:/bin:/usr/sbin:/sbin"''}
+      addEnv INFOPATH "${emacs}/share/info:$out/share/info:${infoPath}"
+      ${lib.optionalString nativeComp ''addEnv EMACSNATIVELOADPATH "$nativeLisp:$nativeLoadPath"''}
+      addEnv EMACSLOADPATH "$siteLisp:"
+
+      if [[ $(grep -c '^</dict>$' $app/Contents/Info.plist) -ne 1 ]]; then
+        echo "Error: Info.plist has no unique top-level </dict> to insert LSEnvironment into" >&2
+        exit 1
+      fi
+      awk -v env="  <key>LSEnvironment</key>"$'\n'"  <dict>"$'\n'"$lsEnvironment  </dict>"$'\n' \
+        '$0 == "</dict>" { printf "%s", env } { print }' \
+        $app/Contents/Info.plist > $app/Contents/Info.plist.new
+      mv $app/Contents/Info.plist.new $app/Contents/Info.plist
     fi
   ''
