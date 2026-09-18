@@ -88,7 +88,21 @@ in
       } load-path))
     '';
 
+    # Executables are put on PATH from Lisp rather than only from the wrapper
+    # script, because Emacs.app has no wrapper (Contents/MacOS/Emacs must stay
+    # a Mach-O for a stable code identity) and LaunchServices applies every
+    # LSEnvironment key except PATH. Directories already present are skipped,
+    # so the wrapped bin/emacs-* does not end up with them twice.
     siteStartExtra = ''
+      ${lib.optionalString (length executablePackages > 0) ''
+        (let ((path (split-string (or (getenv "PATH") "") path-separator t)))
+          (dolist (dir (reverse ${lispList (map (pkg: "${pkg}/bin") executablePackages)}))
+            (unless (member dir path)
+              (push dir path))
+            (unless (member dir exec-path)
+              (push dir exec-path)))
+          (setenv "PATH" (string-join path path-separator)))
+      ''}
       (when init-file-user
         ${lib.optionalString exportManifest ''
         (defconst twist-running-emacs "${emacs.outPath}")
@@ -201,8 +215,8 @@ in
       # macOS TCC tracks permissions by the code signature of the executable
       # in Contents/MacOS, so a shell script there cannot be sealed. Keep the
       # Mach-O and hand the environment over through LSEnvironment instead.
-      # LSEnvironment replaces variables rather than prefixing them, so PATH
-      # keeps the defaults of a LaunchServices-launched process.
+      # PATH is not among them: LaunchServices drops that key while applying
+      # the others, so site-start.el adds the executables instead.
       cp ${emacs}/Applications/Emacs.app/Contents/MacOS/Emacs $app/Contents/MacOS/Emacs
 
       xmlEscape() {
@@ -216,7 +230,6 @@ in
         lsEnvironment+="    <key>$1</key>"$'\n'
         lsEnvironment+="    <string>$(xmlEscape "$2")</string>"$'\n'
       }
-      ${lib.optionalString (length executablePackages > 0) ''addEnv PATH "${lib.makeBinPath executablePackages}:/usr/bin:/bin:/usr/sbin:/sbin"''}
       addEnv INFOPATH "${emacs}/share/info:$out/share/info:${infoPath}"
       ${lib.optionalString nativeComp ''addEnv EMACSNATIVELOADPATH "$nativeLisp:$nativeLoadPath"''}
       addEnv EMACSLOADPATH "$siteLisp:"
