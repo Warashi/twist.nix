@@ -43,22 +43,22 @@ let
           --add-flags --init-directory="${config.home.homeDirectory}/${cfg.directory}"
 
         ${lib.optionalString cfg.emacsclient.enable "ln -t $out/bin -s ${emacs-config.emacs}/bin/emacsclient"}
-
-        if [[ -d "${emacs-config}/Applications/Emacs.app" ]]; then
-          TARGET_NAME="${
-            (lib.strings.toUpper (builtins.substring 0 1 cfg.name)) + (builtins.substring 1 (-1) cfg.name)
-          }"
-
-        mkdir -p $out/Applications/$TARGET_NAME.app/Contents/MacOS
-        cp -r \
-          ${emacs-config}/Applications/Emacs.app/Contents/Info.plist \
-          ${emacs-config}/Applications/Emacs.app/Contents/PkgInfo \
-          ${emacs-config}/Applications/Emacs.app/Contents/Resources \
-          $out/Applications/$TARGET_NAME.app/Contents
-          makeWrapper ${emacs-config}/Applications/Emacs.app/Contents/MacOS/Emacs $out/Applications/$TARGET_NAME.app/Contents/MacOS/Emacs \
-            --add-flags --init-directory="${config.home.homeDirectory}/${cfg.directory}"
-        fi
       '';
+
+  appBundleName =
+    (lib.strings.toUpper (builtins.substring 0 1 cfg.name)) + (builtins.substring 1 (-1) cfg.name);
+
+  # The bundle lives in its own derivation, apart from the wrapper, so that it
+  # can be installed by other means (e.g. signed with a stable identity) without
+  # a second Applications/<Name>.app competing for the same path in
+  # home.packages.
+  appBundle = pkgs.runCommandLocal "${cfg.name}-app" { } ''
+    mkdir -p $out
+    if [[ -d "${emacs-config}/Applications/Emacs.app" ]]; then
+      mkdir -p $out/Applications
+      cp -r ${emacs-config}/Applications/Emacs.app $out/Applications/${appBundleName}.app
+    fi
+  '';
 
   desktopItem = pkgs.makeDesktopItem {
     inherit (cfg) name;
@@ -141,6 +141,35 @@ in
         default = wrapper;
       };
 
+      appBundle = {
+        enable = mkOption {
+          type = types.bool;
+          description = ''
+            Whether to install the macOS application bundle
+            (`Applications/<Name>.app`) through `home.packages`.
+
+            Disable this to install {option}`programs.emacs-twist.appBundle.package`
+            by other means, e.g. after signing it with a stable identity.
+          '';
+          default = pkgs.stdenv.hostPlatform.isDarwin;
+          defaultText = lib.literalExpression "pkgs.stdenv.hostPlatform.isDarwin";
+        };
+
+        package = mkOption {
+          type = types.package;
+          description = ''
+            Derivation holding only the macOS application bundle.
+
+            Unlike the wrapper script, the bundle starts Emacs without
+            `--init-directory`, so {option}`programs.emacs-twist.directory`
+            only takes effect when Emacs would find it by itself, i.e. the
+            XDG default `.config/emacs` with no `~/.emacs.d`.
+          '';
+          readOnly = true;
+          default = appBundle;
+        };
+      };
+
       emacsclient = {
         enable = mkOption {
           type = types.bool;
@@ -182,9 +211,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    warnings = lib.optional (pkgs.stdenv.hostPlatform.isDarwin && cfg.directory != ".config/emacs") (
+      "programs.emacs-twist: ${appBundleName}.app cannot pass --init-directory, "
+      + "so Emacs started from the bundle ignores `directory` (${cfg.directory})."
+    );
+
     home.packages = [
       wrapper
     ]
+    ++ lib.optional cfg.appBundle.enable appBundle
     ++ lib.optional cfg.icons.enable emacs-config.icons
     ++ lib.optional (!pkgs.stdenv.hostPlatform.isDarwin) (
       pkgs.runCommandLocal "${cfg.name}-desktop-item"
